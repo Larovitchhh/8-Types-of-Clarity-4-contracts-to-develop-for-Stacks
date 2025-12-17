@@ -1,0 +1,17 @@
+(define-non-fungible-token simple-nft uint)
+
+(define-data-var token-id uint u0)
+
+(define-public (mint)
+  (let ((id (+ (var-get token-id) u1)))
+    (begin
+      (var-set token-id id)
+      (nft-mint? simple-nft id tx-sender)
+      (ok id)
+    )
+  )
+)
+
+(define-read-only (owner-of (id uint))
+  (nft-get-owner? simple-nft id)
+)
