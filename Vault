@@ -1,0 +1,22 @@
+(define-data-var locked-stx uint u0)
+
+(define-public (deposit (amount uint))
+  (begin
+    (try! (stx-transfer? amount tx-sender (as-contract tx-sender)))
+    (var-set locked-stx (+ (var-get locked-stx) amount))
+    (ok true)
+  )
+)
+
+(define-public (withdraw (amount uint))
+  (begin
+    (asserts! (>= (var-get locked-stx) amount) (err u100))
+    (try! (stx-transfer? amount (as-contract tx-sender) tx-sender))
+    (var-set locked-stx (- (var-get locked-stx) amount))
+    (ok true)
+  )
+)
+
+(define-read-only (get-balance)
+  (var-get locked-stx)
+)
