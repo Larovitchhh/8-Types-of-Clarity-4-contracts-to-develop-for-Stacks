@@ -1,0 +1,13 @@
+(define-map xp principal uint)
+
+(define-public (add-xp (user principal) (amount uint))
+  (begin
+    (asserts! (is-eq tx-sender contract-owner) (err u401))
+    (map-set xp user (+ (default-to u0 (map-get? xp user)) amount))
+    (ok true)
+  )
+)
+
+(define-read-only (get-xp (user principal))
+  (default-to u0 (map-get? xp user))
+)
