@@ -1,0 +1,21 @@
+(define-map profiles
+  principal
+  {
+    name: (string-ascii 50),
+    created-at: uint
+  }
+)
+
+(define-public (register (name (string-ascii 50)))
+  (begin
+    (map-set profiles tx-sender {
+      name: name,
+      created-at: block-height
+    })
+    (ok true)
+  )
+)
+
+(define-read-only (get-profile (user principal))
+  (map-get? profiles user)
+)
