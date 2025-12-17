@@ -1,0 +1,22 @@
+(define-map votes principal bool)
+(define-data-var yes uint u0)
+(define-data-var no uint u0)
+
+(define-public (vote (choice bool))
+  (begin
+    (asserts! (is-none (map-get? votes tx-sender)) (err u1))
+    (map-set votes tx-sender choice)
+    (if choice
+      (var-set yes (+ (var-get yes) u1))
+      (var-set no (+ (var-get no) u1))
+    )
+    (ok true)
+  )
+)
+
+(define-read-only (results)
+  {
+    yes: (var-get yes),
+    no: (var-get no)
+  }
+)
